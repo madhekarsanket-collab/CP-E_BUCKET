@@ -1,0 +1,55 @@
+# ==========================================
+# E-Bucket .gitignore - Privacy & Security
+# ==========================================
+
+# 1. Environment variables & Secrets (CRITICAL)
+.env
+.env.*
+!.env.example
+backend/.env
+backend/.env.*
+!backend/.env.example
+
+# 2. Local database backups & Private Dumps
+*.sql.bak
+*_BACKUP.sql
+E_BUCKET.sql
+E_BUCKET_BACKUP.sql
+database/E_BUCKET.sql
+sql_backups_*/
+*.db
+*.sqlite
+*.sqlite3
+
+# 3. Old project backups
+old_project_backup/
+*.zip
+*.tar.gz
+
+# 4. Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# 5. IDE, Editors & OS Files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# 6. Logs & Crash dumps
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+

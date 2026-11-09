@@ -1,0 +1,367 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+  --bg-primary: #0a0f1d;
+  --bg-secondary: #131b2e;
+  --bg-card: #162035;
+  --bg-card-hover: #1c2944;
+  --bg-input: #0d1527;
+  --accent-cyan: #00f2fe;
+  --accent-blue: #4facfe;
+  --accent-gradient: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+  --text-primary: #ffffff;
+  --text-secondary: #cbd5e1; /* Clear, high-contrast readable light slate */
+  --text-muted: #94a3b8;     /* Legible muted tone, never dark/black */
+  --text-subtle: #a1a1aa;
+  --border-color: rgba(255, 255, 255, 0.12);
+}
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  min-height: 100vh;
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Headings & Typography Hierarchy */
+h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+  color: #ffffff !important;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+/* Override Bootstrap muted text to guarantee high-contrast legibility */
+.text-muted {
+  color: var(--text-secondary) !important;
+}
+
+.text-secondary {
+  color: var(--text-secondary) !important;
+}
+
+p, span, div, label, strong, b, em {
+  color: inherit;
+}
+
+strong, b {
+  color: #ffffff;
+  font-weight: 700;
+}
+
+/* Form Labels */
+label, .form-label {
+  color: #f1f5f9 !important;
+  font-weight: 600;
+  font-size: 0.92rem;
+  margin-bottom: 0.4rem;
+  display: inline-block;
+}
+
+/* Inputs & Form Controls */
+.form-control-custom, .form-select-custom {
+  background-color: var(--bg-input) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  color: #ffffff !important;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 0.95rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-control-custom::placeholder {
+  color: #94a3b8 !important;
+  opacity: 1 !important;
+}
+
+.form-control-custom:focus, .form-select-custom:focus {
+  background-color: #121c33 !important;
+  border-color: var(--accent-cyan) !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 0 3px rgba(0, 242, 254, 0.25) !important;
+  outline: none;
+}
+
+/* Select Dropdowns & Options Contrast */
+select.form-select-custom option {
+  background-color: #0f172a !important;
+  color: #ffffff !important;
+  padding: 8px 12px;
+}
+
+/* Navbar */
+.navbar-custom {
+  background: rgba(19, 27, 46, 0.97);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.brand-text {
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  background: var(--accent-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.navbar-nav .nav-link {
+  color: #e2e8f0 !important;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.navbar-nav .nav-link:hover, .navbar-nav .nav-link.active {
+  color: var(--accent-cyan) !important;
+}
+
+/* Dropdown Menu */
+.dropdown-menu-dark {
+  background-color: #131b2e !important;
+  border: 1px solid var(--border-color) !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+}
+
+.dropdown-menu-dark .dropdown-item {
+  color: #e2e8f0 !important;
+}
+
+.dropdown-menu-dark .dropdown-item:hover {
+  background-color: rgba(0, 242, 254, 0.15) !important;
+  color: #ffffff !important;
+}
+
+/* Cards */
+.card-custom {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.card-custom:hover {
+  transform: translateY(-4px);
+  border-color: rgba(0, 242, 254, 0.4);
+  box-shadow: 0 12px 24px rgba(0, 242, 254, 0.12);
+}
+
+/* Metric Cards in Admin */
+.card-metric {
+  background: #111a2e !important;
+  border: 1px solid rgba(0, 242, 254, 0.3) !important;
+}
+
+.card-metric .metric-title {
+  color: #cbd5e1 !important;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.card-metric .metric-val {
+  color: #ffffff !important;
+  font-weight: 800;
+}
+
+.card-metric .metric-sub {
+  color: var(--accent-cyan) !important;
+  font-size: 0.82rem;
+  font-weight: 500;
+}
+
+/* Gradient & Outline Buttons */
+.btn-cyan {
+  background: var(--accent-gradient) !important;
+  border: none !important;
+  color: #04101e !important;
+  font-weight: 700 !important;
+  border-radius: 8px;
+  padding: 8px 18px;
+  transition: opacity 0.2s ease, transform 0.15s ease;
+}
+
+.btn-cyan:hover {
+  opacity: 0.94;
+  color: #000000 !important;
+  transform: translateY(-1px);
+}
+
+.btn-outline-cyan {
+  background: transparent !important;
+  border: 1px solid var(--accent-cyan) !important;
+  color: var(--accent-cyan) !important;
+  font-weight: 600 !important;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.btn-outline-cyan:hover, .btn-outline-cyan.active {
+  background: var(--accent-cyan) !important;
+  color: #04101e !important;
+}
+
+.btn-outline-secondary {
+  border-color: rgba(255, 255, 255, 0.25) !important;
+  color: #e2e8f0 !important;
+}
+
+.btn-outline-secondary:hover {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+  color: #ffffff !important;
+}
+
+/* Badges */
+.badge-category {
+  background: rgba(0, 242, 254, 0.15) !important;
+  color: #38bdf8 !important;
+  border: 1px solid rgba(0, 242, 254, 0.3) !important;
+  font-weight: 600 !important;
+}
+
+/* Stock Badges per customer rules */
+.badge-stock-green {
+  background: rgba(34, 197, 94, 0.2) !important;
+  color: #4ade80 !important; /* Green */
+  border: 1px solid rgba(34, 197, 94, 0.4) !important;
+  font-weight: 600 !important;
+}
+
+.badge-stock-yellow {
+  background: rgba(234, 179, 8, 0.2) !important;
+  color: #facc15 !important; /* Yellow/Orange */
+  border: 1px solid rgba(234, 179, 8, 0.4) !important;
+  font-weight: 600 !important;
+}
+
+.badge-stock-red {
+  background: rgba(239, 68, 68, 0.2) !important;
+  color: #f87171 !important; /* Red */
+  border: 1px solid rgba(239, 68, 68, 0.4) !important;
+  font-weight: 600 !important;
+}
+
+.badge-stock-out {
+  background: rgba(148, 163, 184, 0.15) !important;
+  color: #f87171 !important; /* Red */
+  border: 1px solid rgba(239, 68, 68, 0.35) !important;
+  font-weight: 600 !important;
+}
+
+/* Custom Table Visibility (Customer, Products, Orders, Admin) */
+.table-custom {
+  color: #f8fafc !important;
+  border-color: var(--border-color) !important;
+}
+
+.table-custom thead th {
+  background: #0d1527 !important;
+  color: #38bdf8 !important;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.2) !important;
+  font-weight: 700 !important;
+  text-transform: uppercase;
+  font-size: 0.84rem;
+  letter-spacing: 0.5px;
+  padding: 12px 14px !important;
+}
+
+.table-custom tbody td {
+  background: transparent !important;
+  color: #f1f5f9 !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+  vertical-align: middle;
+  padding: 12px 14px !important;
+  font-size: 0.93rem;
+}
+
+.table-custom tbody tr:hover td {
+  background: rgba(255, 255, 255, 0.04) !important;
+  color: #ffffff !important;
+}
+
+/* Hero Section */
+.hero-section {
+  background: radial-gradient(circle at 50% 0%, rgba(0, 242, 254, 0.18) 0%, transparent 70%);
+  padding: 50px 0 30px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+/* Payment & Method Select Cards */
+.payment-select-card {
+  background: #111a2d;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  padding: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.payment-select-card:hover {
+  border-color: var(--accent-cyan);
+  background: #16223b;
+}
+
+.payment-select-card.active {
+  border-color: var(--accent-cyan);
+  background: rgba(0, 242, 254, 0.12);
+  box-shadow: 0 0 0 1px var(--accent-cyan);
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+/* Order Confirmation & Receipt Card */
+.receipt-card {
+  background: #111a2e !important;
+  border: 1px solid rgba(0, 242, 254, 0.3) !important;
+  border-radius: 12px;
+}
+
+.receipt-label {
+  color: #94a3b8 !important;
+  font-size: 0.82rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 2px;
+  display: block;
+}
+
+.receipt-value {
+  color: #ffffff !important;
+  font-size: 1.05rem;
+  font-weight: 700;
+  display: block;
+  word-break: break-word;
+}
+
+.receipt-total-label {
+  color: #94a3b8 !important;
+  font-size: 0.88rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 2px;
+  display: block;
+}
+
+.receipt-total-value {
+  color: var(--accent-cyan) !important;
+  font-size: 1.85rem;
+  font-weight: 800;
+  display: block;
+  text-shadow: 0 0 16px rgba(0, 242, 254, 0.3);
+}
+
+/* Order History Status Strip */
+.order-info-strip {
+  background: #111a2e !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: #f1f5f9 !important;
+}
+
+.order-info-strip strong {
+  color: #38bdf8 !important;
+}
