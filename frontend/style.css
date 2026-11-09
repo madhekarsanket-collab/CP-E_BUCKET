@@ -1,55 +1,54 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
 /* ========================================================
-   E-BUCKET PREMIUM DARK NEUMORPHIC (SOFT UI) DESIGN SYSTEM
+   E-BUCKET PREMIUM DARK NEUMORPHIC AMBER + RED THEME
    ======================================================== */
 
 :root {
-  /* Base Neumorphic Surface Colors */
-  --bg-primary: #0d1322;       /* Base foundation background */
-  --bg-surface: #111a2e;       /* Primary raised surface */
-  --bg-surface-soft: #141f36;  /* Soft elevated surface */
-  --bg-inset: #090e1a;         /* Sunken / Inset surface */
+  /* Dark Charcoal Background with Warm Undertones */
+  --bg-primary: #0f1115;       /* Base warm charcoal */
+  --bg-surface: #171a21;       /* Raised warm-grey neumorphic surface */
+  --bg-surface-soft: #1f232c;  /* Elevated surface */
+  --bg-inset: #0a0c0f;         /* Sunken / Inset surface */
   
-  /* Neumorphic Dual Shadows (Light top-left, Dark bottom-right) */
+  /* Primary & Accent Colors (Warm Amber + Rich Red) */
+  --accent-amber: #f59e0b;       /* Golden Amber Primary */
+  --accent-amber-hover: #fbbf24; /* Brighter Golden Amber */
+  --accent-amber-light: #fef3c7; /* Soft amber text */
+  --accent-red: #ef4444;         /* Rich Crimson Red */
+  --accent-red-hover: #dc2626;   /* Deep Crimson Red */
+  --accent-gradient: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  --accent-gradient-red: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%);
+
+  /* Neumorphic Dual Shadows (Warm-toned highlight top-left, deep dark bottom-right) */
   --neu-shadow-flat: 
-    -4px -4px 10px rgba(255, 255, 255, 0.035),
-     6px 6px 14px rgba(0, 0, 0, 0.65);
+    -4px -4px 10px rgba(255, 240, 220, 0.03),
+     6px 6px 14px rgba(0, 0, 0, 0.7);
 
   --neu-shadow-raised: 
-    -5px -5px 12px rgba(255, 255, 255, 0.045),
-     8px 8px 18px rgba(0, 0, 0, 0.75);
+    -5px -5px 12px rgba(255, 240, 220, 0.04),
+     8px 8px 18px rgba(0, 0, 0, 0.8);
 
   --neu-shadow-hover: 
-    -6px -6px 16px rgba(255, 255, 255, 0.06),
-     10px 10px 24px rgba(0, 0, 0, 0.85);
+    -6px -6px 16px rgba(255, 240, 220, 0.055),
+     10px 10px 24px rgba(0, 0, 0, 0.9);
 
   --neu-shadow-inset: 
-    inset 3px 3px 7px rgba(0, 0, 0, 0.8),
-    inset -3px -3px 7px rgba(255, 255, 255, 0.03);
+    inset 3px 3px 7px rgba(0, 0, 0, 0.85),
+    inset -3px -3px 7px rgba(255, 240, 220, 0.025);
 
   --neu-shadow-btn: 
-    -3px -3px 8px rgba(255, 255, 255, 0.05),
-     4px 4px 10px rgba(0, 0, 0, 0.6);
+    -3px -3px 8px rgba(255, 240, 220, 0.045),
+     4px 4px 10px rgba(0, 0, 0, 0.65);
 
   --neu-shadow-btn-pressed: 
-    inset 2px 2px 5px rgba(0, 0, 0, 0.85),
-    inset -2px -2px 5px rgba(255, 255, 255, 0.04);
+    inset 2px 2px 5px rgba(0, 0, 0, 0.9),
+    inset -2px -2px 5px rgba(255, 240, 220, 0.03);
 
-  --neu-shadow-cyan: 
-    -3px -3px 8px rgba(0, 242, 254, 0.15),
-     5px 5px 14px rgba(0, 0, 0, 0.75),
-     0 0 12px rgba(0, 242, 254, 0.2);
-
-  /* Accents & Highlights */
-  --accent-cyan: #00f2fe;
-  --accent-blue: #4facfe;
-  --accent-gradient: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
-  
-  /* Typography Colors */
-  --text-primary: #ffffff;
-  --text-secondary: #cbd5e1;
-  --text-muted: #94a3b8;
+  /* Typography Colors (Warm White and Muted Warm Grey) */
+  --text-primary: #faf8f5;     /* Warm white */
+  --text-secondary: #d1c7bc;   /* Muted warm grey */
+  --text-muted: #9c9184;       /* Subdued warm stone */
   --border-subtle: rgba(255, 255, 255, 0.06);
 }
 
@@ -65,7 +64,7 @@ body {
 
 /* Typography Hierarchy */
 h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
-  color: #ffffff !important;
+  color: var(--text-primary) !important;
   font-weight: 700;
   letter-spacing: -0.02em;
 }
@@ -79,30 +78,35 @@ p, span, div, label, strong, b, em {
 }
 
 strong, b {
-  color: #ffffff;
+  color: var(--text-primary);
   font-weight: 700;
 }
 
+/* Re-map utility text-info and text-cyan to warm amber */
+.text-info, .text-cyan {
+  color: var(--accent-amber) !important;
+}
+
 /* ========================================================
-   1. NAVIGATION BAR (NEUMORPHIC TOPBAR)
+   1. NAVIGATION BAR
    ======================================================== */
 .navbar-custom {
   background: var(--bg-surface);
   border-bottom: 1px solid var(--border-subtle);
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.65);
   padding: 14px 0;
 }
 
 .brand-text {
   font-weight: 800;
   letter-spacing: 0.5px;
-  background: var(--accent-gradient);
+  background: linear-gradient(135deg, #f59e0b 0%, #ef4444 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 .navbar-nav .nav-link {
-  color: #e2e8f0 !important;
+  color: var(--text-secondary) !important;
   font-weight: 600;
   padding: 8px 16px !important;
   border-radius: 10px;
@@ -111,13 +115,13 @@ strong, b {
 }
 
 .navbar-nav .nav-link:hover {
-  color: var(--accent-cyan) !important;
+  color: var(--accent-amber) !important;
   background: var(--bg-surface-soft);
   box-shadow: var(--neu-shadow-flat);
 }
 
 .navbar-nav .nav-link.active {
-  color: var(--accent-cyan) !important;
+  color: var(--accent-amber) !important;
   background: var(--bg-surface-soft);
   box-shadow: var(--neu-shadow-inset);
 }
@@ -126,7 +130,7 @@ strong, b {
    2. HERO SECTION
    ======================================================== */
 .hero-section {
-  background: radial-gradient(circle at 50% 0%, rgba(0, 242, 254, 0.09) 0%, transparent 65%);
+  background: radial-gradient(circle at 50% 0%, rgba(245, 158, 11, 0.08) 0%, transparent 65%);
   padding: 48px 0 28px;
   border-bottom: 1px solid var(--border-subtle);
 }
@@ -144,20 +148,20 @@ strong, b {
 
 .card-custom:hover {
   transform: translateY(-4px);
-  border-color: rgba(0, 242, 254, 0.25);
+  border-color: rgba(245, 158, 11, 0.3);
   box-shadow: var(--neu-shadow-hover);
 }
 
 /* Metric Cards in Admin */
 .card-metric {
   background: var(--bg-surface) !important;
-  border: 1px solid rgba(0, 242, 254, 0.2) !important;
+  border: 1px solid rgba(245, 158, 11, 0.25) !important;
   border-radius: 16px;
   box-shadow: var(--neu-shadow-raised);
 }
 
 .card-metric .metric-title {
-  color: #94a3b8 !important;
+  color: var(--text-muted) !important;
   font-size: 0.82rem;
   font-weight: 600;
   letter-spacing: 0.05em;
@@ -165,35 +169,35 @@ strong, b {
 }
 
 .card-metric .metric-val {
-  color: #ffffff !important;
+  color: var(--text-primary) !important;
   font-weight: 800;
 }
 
 .card-metric .metric-sub {
-  color: var(--accent-cyan) !important;
+  color: var(--accent-amber) !important;
   font-size: 0.8rem;
   font-weight: 500;
 }
 
 /* ========================================================
-   4. NEUMORPHIC BUTTONS
+   4. NEUMORPHIC BUTTONS (AMBER PRIMARY + RED DESTRUCTIVE)
    ======================================================== */
 .btn-cyan {
   background: var(--accent-gradient) !important;
   border: none !important;
-  color: #04101e !important;
+  color: #171a21 !important;
   font-weight: 700 !important;
   border-radius: 12px;
   padding: 9px 20px;
-  box-shadow: var(--neu-shadow-btn), 0 0 10px rgba(0, 242, 254, 0.25);
+  box-shadow: var(--neu-shadow-btn), 0 0 10px rgba(245, 158, 11, 0.25);
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .btn-cyan:hover {
-  opacity: 0.95;
-  color: #000000 !important;
+  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%) !important;
+  color: #0f1115 !important;
   transform: translateY(-2px);
-  box-shadow: -4px -4px 10px rgba(255, 255, 255, 0.08), 6px 6px 14px rgba(0, 0, 0, 0.75), 0 0 16px rgba(0, 242, 254, 0.4);
+  box-shadow: -4px -4px 10px rgba(255, 240, 220, 0.08), 6px 6px 14px rgba(0, 0, 0, 0.8), 0 0 14px rgba(245, 158, 11, 0.4);
 }
 
 .btn-cyan:active {
@@ -203,8 +207,8 @@ strong, b {
 
 .btn-outline-cyan {
   background: var(--bg-surface) !important;
-  border: 1px solid rgba(0, 242, 254, 0.35) !important;
-  color: var(--accent-cyan) !important;
+  border: 1px solid rgba(245, 158, 11, 0.4) !important;
+  color: var(--accent-amber) !important;
   font-weight: 600 !important;
   border-radius: 12px;
   box-shadow: var(--neu-shadow-btn);
@@ -213,15 +217,33 @@ strong, b {
 
 .btn-outline-cyan:hover, .btn-outline-cyan.active {
   background: var(--bg-surface-soft) !important;
-  border-color: var(--accent-cyan) !important;
+  border-color: var(--accent-amber) !important;
   color: #ffffff !important;
-  box-shadow: var(--neu-shadow-btn-pressed), 0 0 10px rgba(0, 242, 254, 0.3) !important;
+  box-shadow: var(--neu-shadow-btn-pressed), 0 0 10px rgba(245, 158, 11, 0.3) !important;
+}
+
+/* Destructive Button Styling */
+.btn-outline-danger {
+  background: var(--bg-surface) !important;
+  border: 1px solid rgba(239, 68, 68, 0.4) !important;
+  color: var(--accent-red) !important;
+  font-weight: 600 !important;
+  border-radius: 12px;
+  box-shadow: var(--neu-shadow-btn);
+  transition: all 0.2s ease;
+}
+
+.btn-outline-danger:hover {
+  background: rgba(239, 68, 68, 0.15) !important;
+  border-color: var(--accent-red) !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 10px rgba(239, 68, 68, 0.3);
 }
 
 .btn-outline-secondary {
   background: var(--bg-surface) !important;
   border: 1px solid var(--border-subtle) !important;
-  color: #cbd5e1 !important;
+  color: var(--text-secondary) !important;
   border-radius: 12px;
   box-shadow: var(--neu-shadow-btn);
   transition: all 0.2s ease;
@@ -229,7 +251,7 @@ strong, b {
 
 .btn-outline-secondary:hover {
   background: var(--bg-surface-soft) !important;
-  color: #ffffff !important;
+  color: var(--text-primary) !important;
   box-shadow: var(--neu-shadow-hover);
 }
 
@@ -241,7 +263,7 @@ strong, b {
    5. INSET FORM CONTROLS & SEARCH BAR
    ======================================================== */
 label, .form-label {
-  color: #f1f5f9 !important;
+  color: var(--text-primary) !important;
   font-weight: 600;
   font-size: 0.9rem;
   margin-bottom: 0.45rem;
@@ -251,7 +273,7 @@ label, .form-label {
 .form-control-custom, .form-select-custom {
   background-color: var(--bg-inset) !important;
   border: 1px solid rgba(255, 255, 255, 0.08) !important;
-  color: #ffffff !important;
+  color: var(--text-primary) !important;
   border-radius: 12px;
   padding: 11px 16px;
   font-size: 0.95rem;
@@ -260,44 +282,36 @@ label, .form-label {
 }
 
 .form-control-custom::placeholder {
-  color: #64748b !important;
+  color: var(--text-muted) !important;
   opacity: 1 !important;
 }
 
 .form-control-custom:focus, .form-select-custom:focus {
-  background-color: #0c1220 !important;
-  border-color: rgba(0, 242, 254, 0.5) !important;
+  background-color: #0d0f14 !important;
+  border-color: rgba(245, 158, 11, 0.5) !important;
   color: #ffffff !important;
-  box-shadow: var(--neu-shadow-inset), 0 0 0 2px rgba(0, 242, 254, 0.25) !important;
+  box-shadow: var(--neu-shadow-inset), 0 0 0 2px rgba(245, 158, 11, 0.25) !important;
   outline: none;
 }
 
 select.form-select-custom option {
-  background-color: #0b111e !important;
+  background-color: #0f1115 !important;
   color: #ffffff !important;
   padding: 10px;
 }
 
 /* ========================================================
-   6. CATEGORY FILTER PILLS
-   ======================================================== */
-.category-pill {
-  border-radius: 20px !important;
-  padding: 6px 16px !important;
-  font-size: 0.85rem !important;
-}
-
-/* ========================================================
-   7. BADGES & STOCK INDICATORS
+   6. BADGES & CLEAR STOCK INDICATORS
    ======================================================== */
 .badge-category {
-  background: rgba(0, 242, 254, 0.12) !important;
-  color: #38bdf8 !important;
-  border: 1px solid rgba(0, 242, 254, 0.25) !important;
+  background: rgba(245, 158, 11, 0.12) !important;
+  color: var(--accent-amber) !important;
+  border: 1px solid rgba(245, 158, 11, 0.3) !important;
   font-weight: 600 !important;
-  box-shadow: inset 1px 1px 3px rgba(0, 242, 254, 0.15);
+  box-shadow: inset 1px 1px 3px rgba(245, 158, 11, 0.15);
 }
 
+/* Rule 1: Green for healthy stock (> 10) */
 .badge-stock-green {
   background: rgba(34, 197, 94, 0.16) !important;
   color: #4ade80 !important;
@@ -306,41 +320,44 @@ select.form-select-custom option {
   box-shadow: inset 1px 1px 3px rgba(34, 197, 94, 0.15);
 }
 
+/* Rule 2: Amber for low stock (4 to 10) */
 .badge-stock-yellow {
-  background: rgba(234, 179, 8, 0.16) !important;
-  color: #facc15 !important;
-  border: 1px solid rgba(234, 179, 8, 0.35) !important;
+  background: rgba(245, 158, 11, 0.18) !important;
+  color: var(--accent-amber) !important;
+  border: 1px solid rgba(245, 158, 11, 0.4) !important;
   font-weight: 600 !important;
-  box-shadow: inset 1px 1px 3px rgba(234, 179, 8, 0.15);
+  box-shadow: inset 1px 1px 3px rgba(245, 158, 11, 0.15);
 }
 
+/* Rule 3: Red for critically low stock (1 to 3) */
 .badge-stock-red {
-  background: rgba(239, 68, 68, 0.16) !important;
-  color: #f87171 !important;
-  border: 1px solid rgba(239, 68, 68, 0.35) !important;
+  background: rgba(239, 68, 68, 0.18) !important;
+  color: var(--accent-red) !important;
+  border: 1px solid rgba(239, 68, 68, 0.4) !important;
   font-weight: 600 !important;
   box-shadow: inset 1px 1px 3px rgba(239, 68, 68, 0.15);
 }
 
+/* Rule 4: Red for out of stock (0) */
 .badge-stock-out {
   background: rgba(148, 163, 184, 0.12) !important;
-  color: #f87171 !important;
-  border: 1px solid rgba(239, 68, 68, 0.3) !important;
+  color: var(--accent-red) !important;
+  border: 1px solid rgba(239, 68, 68, 0.35) !important;
   font-weight: 600 !important;
 }
 
 /* ========================================================
-   8. TABLES (NEUMORPHIC SURFACE TABLES)
+   7. NEUMORPHIC TABLES
    ======================================================== */
 .table-custom {
-  color: #f8fafc !important;
+  color: var(--text-primary) !important;
   border-collapse: separate;
   border-spacing: 0;
 }
 
 .table-custom thead th {
   background: var(--bg-inset) !important;
-  color: #38bdf8 !important;
+  color: var(--accent-amber) !important;
   border-bottom: 2px solid rgba(255, 255, 255, 0.08) !important;
   font-weight: 700 !important;
   text-transform: uppercase;
@@ -351,7 +368,7 @@ select.form-select-custom option {
 
 .table-custom tbody td {
   background: transparent !important;
-  color: #f1f5f9 !important;
+  color: var(--text-primary) !important;
   border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
   vertical-align: middle;
   padding: 13px 16px !important;
@@ -365,7 +382,7 @@ select.form-select-custom option {
 }
 
 /* ========================================================
-   9. PAYMENT SELECT CARDS (CHECKOUT)
+   8. PAYMENT & CHECKOUT CARDS
    ======================================================== */
 .payment-select-card {
   background: var(--bg-surface);
@@ -379,28 +396,28 @@ select.form-select-custom option {
 
 .payment-select-card:hover {
   transform: translateY(-2px);
-  border-color: rgba(0, 242, 254, 0.3);
+  border-color: rgba(245, 158, 11, 0.35);
   box-shadow: var(--neu-shadow-hover);
 }
 
 .payment-select-card.active {
-  border-color: var(--accent-cyan);
+  border-color: var(--accent-amber);
   background: var(--bg-surface-soft);
-  box-shadow: var(--neu-shadow-inset), 0 0 8px rgba(0, 242, 254, 0.25);
+  box-shadow: var(--neu-shadow-inset), 0 0 8px rgba(245, 158, 11, 0.25);
 }
 
 /* ========================================================
-   10. RECEIPT & ORDER CARDS
+   9. RECEIPT & ORDER TRACKING
    ======================================================== */
 .receipt-card {
   background: var(--bg-surface) !important;
-  border: 1px solid rgba(0, 242, 254, 0.25) !important;
+  border: 1px solid rgba(245, 158, 11, 0.3) !important;
   border-radius: 16px;
   box-shadow: var(--neu-shadow-raised);
 }
 
 .receipt-label {
-  color: #94a3b8 !important;
+  color: var(--text-muted) !important;
   font-size: 0.8rem;
   font-weight: 500;
   text-transform: uppercase;
@@ -410,7 +427,7 @@ select.form-select-custom option {
 }
 
 .receipt-value {
-  color: #ffffff !important;
+  color: var(--text-primary) !important;
   font-size: 1.05rem;
   font-weight: 700;
   display: block;
@@ -418,7 +435,7 @@ select.form-select-custom option {
 }
 
 .receipt-total-label {
-  color: #94a3b8 !important;
+  color: var(--text-muted) !important;
   font-size: 0.85rem;
   font-weight: 600;
   text-transform: uppercase;
@@ -428,11 +445,11 @@ select.form-select-custom option {
 }
 
 .receipt-total-value {
-  color: var(--accent-cyan) !important;
+  color: var(--accent-amber) !important;
   font-size: 1.85rem;
   font-weight: 800;
   display: block;
-  text-shadow: 0 0 16px rgba(0, 242, 254, 0.3);
+  text-shadow: 0 0 16px rgba(245, 158, 11, 0.3);
 }
 
 .order-info-strip {
@@ -440,11 +457,11 @@ select.form-select-custom option {
   border: 1px solid var(--border-subtle) !important;
   border-radius: 12px;
   box-shadow: var(--neu-shadow-inset);
-  color: #f1f5f9 !important;
+  color: var(--text-primary) !important;
 }
 
 .order-info-strip strong {
-  color: #38bdf8 !important;
+  color: var(--accent-amber) !important;
 }
 
 /* Dropdown Menu */
@@ -457,7 +474,7 @@ select.form-select-custom option {
 }
 
 .dropdown-menu-dark .dropdown-item {
-  color: #e2e8f0 !important;
+  color: var(--text-secondary) !important;
   border-radius: 8px;
   padding: 8px 14px;
   transition: all 0.15s ease;
@@ -465,7 +482,7 @@ select.form-select-custom option {
 
 .dropdown-menu-dark .dropdown-item:hover {
   background-color: var(--bg-surface-soft) !important;
-  color: var(--accent-cyan) !important;
+  color: var(--accent-amber) !important;
   box-shadow: var(--neu-shadow-flat);
 }
 
