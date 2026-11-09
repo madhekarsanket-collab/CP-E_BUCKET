@@ -1,5 +1,36 @@
 const { useState, useEffect, useMemo, useRef } = React;
 
+// ==========================================
+// API Configuration for Localhost vs Vercel
+// ==========================================
+// When running locally, use relative API paths.
+// When deployed on Vercel or external domain, route requests to the public tunnel URL.
+const TUNNEL_URL = 'https://rug-structure-visor.ngrok-free.dev';
+
+const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+const API_BASE_URL = isLocalhost ? '' : TUNNEL_URL;
+axios.defaults.baseURL = API_BASE_URL;
+
+// Add ngrok browser warning bypass header ONLY when using an ngrok tunnel
+if (!isLocalhost && API_BASE_URL.includes('ngrok')) {
+  axios.defaults.headers.common['ngrok-skip-browser-warning'] = 'true';
+}
+
+// Automatically attach HMAC admin token to all admin requests
+axios.interceptors.request.use(config => {
+  if (config.url && config.url.includes('/api/admin/')) {
+    try {
+      const savedAdmin = JSON.parse(localStorage.getItem('ebucket_admin'));
+      if (savedAdmin && savedAdmin.token) {
+        config.headers['Authorization'] = `Bearer ${savedAdmin.token}`;
+      }
+    } catch (e) {
+      // Ignored
+    }
+  }
+  return config;
+});
+
 // Helper component to render customer stock badge based on stock rules
 function CustomerStockBadge({ product }) {
   const stock = product.stock !== undefined ? product.stock : 0;

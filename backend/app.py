@@ -1,6 +1,10 @@
 import os
 import hmac
+import hashlib
+import time
+import base64
 import datetime
+from functools import wraps
 from decimal import Decimal
 from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
@@ -12,8 +16,61 @@ from security import hash_new_password, verify_password
 load_dotenv()
 
 app = Flask(__name__, static_folder="../frontend", static_url_path="")
-CORS(app)
+
+# Strict CORS: Allow only local origins and your verified Vercel production frontend
+allowed_origins = [
+    "https://cp-ebucket-frontend.vercel.app",
+    "http://localhost:5000",
+    "http://127.0.0.1:5000"
+]
+CORS(app, origins=allowed_origins, supports_credentials=True)
+
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'ebucket_secret_2026')
+
+def generate_admin_token(username: str, expires_in_seconds: int = 86400) -> str:
+    """Generates an expiring HMAC-SHA256 admin token."""
+    secret = app.config['SECRET_KEY'].encode('utf-8')
+    exp = int(time.time()) + expires_in_seconds
+    payload = f"{username}:{exp}"
+    signature = hmac.new(secret, payload.encode('utf-8'), hashlib.sha256).hexdigest()
+    token_raw = f"{payload}:{signature}"
+    return base64.urlsafe_b64encode(token_raw.encode('utf-8')).decode('ascii')
+
+def verify_admin_token(token: str) -> bool:
+    """Verifies that the admin token has a valid HMAC signature and has not expired."""
+    if not token:
+        return False
+    try:
+        token_raw = base64.urlsafe_b64decode(token.encode('ascii')).decode('utf-8')
+        parts = token_raw.split(':')
+        if len(parts) != 3:
+            return False
+        username, exp_str, signature = parts
+        exp = int(exp_str)
+        if time.time() > exp:
+            return False  # Expired
+
+        secret = app.config['SECRET_KEY'].encode('utf-8')
+        payload = f"{username}:{exp_str}"
+        expected_sig = hmac.new(secret, payload.encode('utf-8'), hashlib.sha256).hexdigest()
+        return hmac.compare_digest(signature, expected_sig)
+    except Exception:
+        return False
+
+def admin_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        auth_header = request.headers.get('Authorization', '')
+        token = ''
+        if auth_header.startswith('Bearer '):
+            token = auth_header.split(' ', 1)[1].strip()
+        elif 'X-Admin-Token' in request.headers:
+            token = request.headers.get('X-Admin-Token', '').strip()
+
+        if not token or not verify_admin_token(token):
+            return jsonify({"error": "Admin authorization required or token expired"}), 401
+        return f(*args, **kwargs)
+    return decorated_function
 
 def get_next_id(cursor, table_name, id_column):
     """Safely calculates the next INT primary key."""
@@ -195,9 +252,15 @@ def admin_login():
     pass_match = hmac.compare_digest(password, admin_pass)
 
     if user_match and pass_match:
+        token = generate_admin_token(admin_user)
         return jsonify({
             "message": "Admin authenticated successfully",
-            "admin": {"username": admin_user, "role": "ADMIN", "name": "E-Bucket Admin"}
+            "admin": {
+                "username": admin_user,
+                "role": "ADMIN",
+                "name": "E-Bucket Admin",
+                "token": token
+            }
         }), 200
 
     return jsonify({"error": "Invalid admin credentials"}), 401
@@ -465,6 +528,7 @@ def get_user_orders(user_id):
 
 # ----------------- ADMIN DASHBOARD APIS -----------------
 @app.route('/api/admin/metrics', methods=['GET'])
+@admin_required
 def admin_metrics():
     conn = get_db_connection()
     cursor = conn.cursor()
@@ -493,6 +557,7 @@ def admin_metrics():
         conn.close()
 
 @app.route('/api/admin/customers', methods=['GET'])
+@admin_required
 def admin_customers():
     conn = get_db_connection()
     cursor = conn.cursor()
@@ -508,6 +573,7 @@ def admin_customers():
         conn.close()
 
 @app.route('/api/admin/orders', methods=['GET'])
+@admin_required
 def admin_orders():
     conn = get_db_connection()
     cursor = conn.cursor()
@@ -533,6 +599,7 @@ def admin_orders():
         conn.close()
 
 @app.route('/api/admin/orders/<int:order_id>/status', methods=['PATCH'])
+@admin_required
 def update_order_status(order_id):
     data = request.get_json() or {}
     new_status = data.get('status')
@@ -553,6 +620,7 @@ def update_order_status(order_id):
         conn.close()
 
 @app.route('/api/admin/products', methods=['GET'])
+@admin_required
 def admin_get_products():
     """Admin endpoint returning exact raw stock numbers for every product."""
     conn = get_db_connection()
@@ -574,6 +642,7 @@ def admin_get_products():
         conn.close()
 
 @app.route('/api/admin/products', methods=['POST'])
+@admin_required
 def admin_add_product():
     data = request.get_json() or {}
     name = data.get('name', '').strip()
@@ -606,6 +675,7 @@ def admin_add_product():
         conn.close()
 
 @app.route('/api/admin/products/<int:product_id>', methods=['PUT'])
+@admin_required
 def admin_update_product(product_id):
     data = request.get_json() or {}
     name = data.get('name', '').strip()
@@ -635,6 +705,7 @@ def admin_update_product(product_id):
         conn.close()
 
 @app.route('/api/admin/products/<int:product_id>', methods=['DELETE'])
+@admin_required
 def admin_delete_product(product_id):
     conn = get_db_connection()
     cursor = conn.cursor()
@@ -670,6 +741,9 @@ def serve_static(path):
 
 if __name__ == '__main__':
     port = int(os.getenv('PORT', 5000))
-    print(f"Starting E-Bucket Flask Backend on http://localhost:{port}")
-    app.run(host='0.0.0.0', port=port, debug=True)
+    # Flask debug mode disabled by default for public exposure safety.
+    # Set FLASK_DEBUG=true in .env only if local interactive debugging is needed.
+    debug_mode = os.getenv('FLASK_DEBUG', 'False').strip().lower() in ('true', '1', 'yes')
+    print(f"Starting E-Bucket Flask Backend on http://localhost:{port} (debug={debug_mode})")
+    app.run(host='0.0.0.0', port=port, debug=debug_mode)
 
