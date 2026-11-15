@@ -37,6 +37,8 @@ PREFLIGHT_CHECKS = [
     ('two categories share a name', 'SELECT NAME FROM category GROUP BY NAME HAVING COUNT(*) > 1'),
     ('a product has a price of 0 or less', 'SELECT PRODUCT_ID FROM product WHERE PRICE IS NULL OR PRICE <= 0'),
     ('a product has negative stock', 'SELECT PRODUCT_ID FROM product WHERE STOCK < 0'),
+    ('an order has more than one payment', 'SELECT ORDER_ID FROM payment GROUP BY ORDER_ID HAVING COUNT(*) > 1'),
+    ('an order has more than one delivery', 'SELECT ORDER_ID FROM delivery GROUP BY ORDER_ID HAVING COUNT(*) > 1'),
     ('an order line has a quantity of 0 or less', 'SELECT ORDER_ITEM_ID FROM order_item WHERE QUANTITY IS NULL OR QUANTITY <= 0'),
 ]
 

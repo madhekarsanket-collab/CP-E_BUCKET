@@ -71,6 +71,7 @@ CREATE TABLE IF NOT EXISTS `payment` (
     `STATUS`       VARCHAR(20) NOT NULL DEFAULT 'Pending',
     `PAYMENT_DATE` DATE NOT NULL,
     `ORDER_ID`     INT NOT NULL,
+    UNIQUE KEY `uq_payment_order` (`ORDER_ID`),   -- ER diagram: Order 1 --- 1 Payment
     FOREIGN KEY (`ORDER_ID`) REFERENCES `orders`(`ORDER_ID`)
 );
 
@@ -80,6 +81,7 @@ CREATE TABLE IF NOT EXISTS `delivery` (
     `DELIVERY_DATE` DATE,
     `SHIPMENT_NAME` VARCHAR(50) NOT NULL,
     `ORDER_ID`      INT NOT NULL,
+    UNIQUE KEY `uq_delivery_order` (`ORDER_ID`),  -- ER diagram: Order 1 --- 1 Delivery
     FOREIGN KEY (`ORDER_ID`) REFERENCES `orders`(`ORDER_ID`)
 );
 

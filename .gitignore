@@ -65,3 +65,8 @@ frontend/.env.*.local
 .coverage
 htmlcov/
 .playwright-mcp/
+
+# 9. Local-only SQL files that contain a password
+*.local.sql
+
+localrun.log

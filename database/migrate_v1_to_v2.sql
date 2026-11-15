@@ -46,5 +46,7 @@ ALTER TABLE `orders`     MODIFY `USER_ID`    INT NOT NULL;
 ALTER TABLE `order_item` MODIFY `QUANTITY`   INT NOT NULL;
 ALTER TABLE `order_item` ADD CONSTRAINT `chk_order_item_qty` CHECK (`QUANTITY` > 0);
 ALTER TABLE `payment`    MODIFY `STATUS`     VARCHAR(20) NOT NULL DEFAULT 'Pending';
+ALTER TABLE `payment`    ADD UNIQUE KEY `uq_payment_order` (`ORDER_ID`);
+ALTER TABLE `delivery`   ADD UNIQUE KEY `uq_delivery_order` (`ORDER_ID`);
 
 SET FOREIGN_KEY_CHECKS = 1;

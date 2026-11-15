@@ -88,7 +88,7 @@ For a single server instead, build the frontend and run `python backend/app.py` 
 ```
 backend/    Flask API (app, auth, catalog, orders, admin, validators, db, security) + tests/
 frontend/   React app: src/pages, src/components, src/context, src/lib, src/styles; public/products = photos
-database/   schema.sql · seed.sql (demo data) · migrate_v1_to_v2.sql
+database/   schema.sql · seed.sql (demo data) · migrate_v1_to_v2.sql · e_bucket_full.sql (everything in one file: open it in Workbench and run)
 ```
 
 ## Photo credits
