@@ -5,7 +5,7 @@ const { useState, useEffect, useMemo, useRef } = React;
 // ==========================================
 // When running locally, use relative API paths.
 // When deployed on Vercel or external domain, route requests to the public tunnel URL.
-const TUNNEL_URL = 'https://rug-structure-visor.ngrok-free.dev';
+const TUNNEL_URL = 'https://cp-ebucket-frontend.vercel.app.ngrok-free.app';
 
 const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
 const API_BASE_URL = isLocalhost ? '' : TUNNEL_URL;
@@ -468,7 +468,7 @@ function ShopView({ categories, products, selectedCategory, setSelectedCategory,
         <div className="container">
           <h1 className="display-5 fw-bold mb-2">Everything You Need, All in One Place.</h1>
           <p className="text-secondary fs-5 mb-4">Discover electronics, fitness gear, musical instruments, accessories, apparel and more &mdash; explore products across multiple categories at E-Bucket.</p>
-          
+
           <div className="row justify-content-center">
             <div className="col-md-7">
               <div className="input-group">
