@@ -5,7 +5,7 @@ const { useState, useEffect, useMemo, useRef } = React;
 // ==========================================
 // When running locally, use relative API paths.
 // When deployed on Vercel or external domain, route requests to the public tunnel URL.
-const TUNNEL_URL = 'https://cp-ebucket-frontend.vercel.app.ngrok-free.app';
+const TUNNEL_URL = 'https://rug-structure-visor.ngrok-free.dev';
 
 const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
 const API_BASE_URL = isLocalhost ? '' : TUNNEL_URL;
