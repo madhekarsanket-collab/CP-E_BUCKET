@@ -1,0 +1,73 @@
+/* Design tokens. Warm bazaar palette: marigold (action), chili (accent), cocoa (ink).
+   Every text/background pair below is >= 4.5:1 in both themes. */
+:root {
+  --font-display: 'Bricolage Grotesque Variable', 'Trebuchet MS', system-ui, sans-serif;
+  --font-body: 'DM Sans Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  --bg: #fff4e6;
+  --bg-sunk: #ffe9cf;
+  --surface: #fffbf5;
+  --surface-raised: #ffffff;
+  --ink: #2a1810;
+  --ink-soft: #5e4334;
+  --line: #ebd3b5;
+  --line-strong: #d9b88f;
+
+  --primary: #f2a007;
+  --primary-hover: #dc8f00;
+  --on-primary: #2a1810;
+  --accent: #c8321a;
+  --accent-soft: #fde2d9;
+  --good: #2b7549;
+  --good-soft: #dcf2e4;
+  --warn: #9a4a05;
+  --warn-soft: #ffe8c2;
+  --bad: #b42318;
+  --bad-soft: #fde0dc;
+  --info: #7a3e12;
+  --info-soft: #f6e3cf;
+  --focus: #2a1810;
+
+  --radius-sm: 10px;
+  --radius: 16px;
+  --radius-lg: 24px;
+  --shadow-sm: 0 1px 2px rgb(90 50 20 / 8%), 0 2px 8px rgb(90 50 20 / 6%);
+  --shadow: 0 6px 24px rgb(90 50 20 / 12%);
+  --shadow-lift: 0 14px 36px rgb(90 50 20 / 20%);
+
+  --ease: cubic-bezier(0.22, 0.8, 0.3, 1);
+  --fast: 160ms;
+  --medium: 260ms;
+  --header-h: 68px;
+  --space-page: clamp(1rem, 0.6rem + 1.6vw, 2rem);
+}
+
+:root[data-theme='dark'] {
+  --bg: #17100b;
+  --bg-sunk: #1f150e;
+  --surface: #251912;
+  --surface-raised: #2e2017;
+  --ink: #fbebd9;
+  --ink-soft: #cdb098;
+  --line: #43301f;
+  --line-strong: #5d4330;
+
+  --primary: #ffb22e;
+  --primary-hover: #ffc457;
+  --on-primary: #241407;
+  --accent: #ff8a6b;
+  --accent-soft: #432018;
+  --good: #67d093;
+  --good-soft: #17301f;
+  --warn: #ffb860;
+  --warn-soft: #3b2810;
+  --bad: #ff8d82;
+  --bad-soft: #3d1a17;
+  --info: #f0c08f;
+  --info-soft: #3a2616;
+  --focus: #fbebd9;
+
+  --shadow-sm: 0 1px 2px rgb(0 0 0 / 30%);
+  --shadow: 0 8px 28px rgb(0 0 0 / 40%);
+  --shadow-lift: 0 16px 40px rgb(0 0 0 / 55%);
+}
