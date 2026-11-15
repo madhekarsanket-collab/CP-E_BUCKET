@@ -53,3 +53,15 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+
+# 7. Node / frontend build output
+node_modules/
+frontend/dist/
+frontend/.env.local
+frontend/.env.*.local
+
+# 8. Test and coverage artefacts
+.pytest_cache/
+.coverage
+htmlcov/
+.playwright-mcp/
