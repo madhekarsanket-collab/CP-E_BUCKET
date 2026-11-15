@@ -19,6 +19,12 @@ def connection_settings(include_database=True):
     }
     if include_database:
         settings['database'] = os.getenv('DB_NAME', 'e_bucket')
+    # Hosted MySQL (Aiven, Railway, ...) requires TLS. DB_SSL_CA optionally pins the provider's CA file.
+    if os.getenv('DB_SSL', '').lower() in ('1', 'true', 'yes'):
+        settings['ssl_disabled'] = False
+        if os.getenv('DB_SSL_CA'):
+            settings['ssl_ca'] = os.getenv('DB_SSL_CA')
+            settings['ssl_verify_cert'] = True
     return settings
 
 

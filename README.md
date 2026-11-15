@@ -66,13 +66,22 @@ The backend suite (65 tests, about 88% coverage) covers auth, validation, author
 - Strict Content-Security-Policy and standard security headers on all responses.
 - `backend/.env` is git-ignored. **The secret key that older versions of this repo put in `.env.example` is public: if you ever used it, rotate it.**
 
-## Deploying
+## Deploying (Vercel + hosted MySQL)
 
-The browser should always call `/api` on the same origin as the page, because that is what makes cookie sessions safe.
+The whole app is one Vercel project: the React build is served as static files and `api/index.py` runs the Flask API as a serverless function, so the browser always talks to one origin (which is what makes the cookie sessions safe). The database is a hosted MySQL, because Vercel has none.
 
-- **One server:** build the frontend and run `python backend/app.py` behind HTTPS. Set `TRUST_PROXY=true` if a proxy sits in front.
-- **Vercel + separate API:** deploy `frontend/` to Vercel and add a rewrite in `frontend/vercel.json` sending `/api/:path*` to your backend URL, so the browser still sees one origin. Host MySQL somewhere managed.
-- Do not use ngrok for a public site, and do not run with `FLASK_DEBUG=true`.
+1. **Create a hosted MySQL 8** that allows triggers (for example Aiven's free MySQL). Note its host, port, user, password and database name.
+2. **Load the schema and demo data into it** from your machine, so the live database matches this repo:
+   ```bash
+   DB_HOST=... DB_PORT=... DB_USER=... DB_PASSWORD=... DB_NAME=... DB_SSL=true python backend/init_db.py --seed
+   ```
+   Use `--migrate` instead of `--seed` to upgrade an existing database, and drop `--seed` for a production shop without demo accounts.
+3. **Import the repo in Vercel** (root directory = repo root) and set these environment variables: `DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASSWORD`, `DB_NAME`, `DB_SSL=true`, `DB_POOL_SIZE=2`, `SECRET_KEY` (fresh, 32+ characters), `ADMIN_USERNAME`, `ADMIN_PASSWORD`, `COOKIE_SECURE=true`, `TRUST_PROXY=true`.
+4. Deploy. Any later change to `database/*.sql` reaches the live database by re-running step 2, and every push to the connected branch redeploys the site.
+
+Rate-limit counters live in memory per function instance, so on Vercel they are a soft limit. Do not run with `FLASK_DEBUG=true`, and do not use ngrok for a public site.
+
+For a single server instead, build the frontend and run `python backend/app.py` behind HTTPS.
 
 ## Project layout
 
