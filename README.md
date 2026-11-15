@@ -1,115 +1,87 @@
-# E-Bucket — Multi-Category E-Commerce Marketplace
+# E-Bucket
 
-An end-to-end full-stack e-commerce marketplace built for college Database Management Systems (DBMS) evaluation. The platform showcases a complete shopping workflow connecting directly to a 7-table MySQL schema with active database triggers and safe transactional operations.
+A multi-category e-commerce marketplace: browse and search 8 categories, add to a cart, check out, track orders, and manage the shop from an admin dashboard. Built for a college DBMS course, then hardened for real use.
 
----
+**Stack:** React 18 + Vite (frontend) · Python Flask (API) · MySQL 8 (7 tables, 4 triggers) · pytest + Vitest
 
-## 🛠️ Technology Stack
-- **Frontend**: React 18 Standalone (In-browser Babel transpilation, Axios, Bootstrap 5, custom Cyber/Dark Navy styling)
-- **Backend**: Python Flask REST API
-- **Database**: MySQL Server 8.0 (Database name: `e_bucket`)
-- **Database Connector**: `mysql-connector-python`
-- **Security**: Salted PBKDF2 password hashing with Upgrade-on-Login support, atomic transactions, parameterized queries.
+## What you get
 
----
+**Shoppers:** search, category and price filters, sorting, "show more" paging, product pages with photos, a persistent cart, checkout with courier and payment choice, order history with a delivery progress bar, dark mode.
+**Admin:** revenue and stock metrics, product create/edit/delete (with photo), order status changes, customer list.
+**Database:** `userr`, `category`, `product`, `orders`, `order_item`, `payment`, `delivery`, with triggers that reduce stock on purchase, restore it on cancellation or delete, and mark an order Paid when its payment succeeds.
 
-## 📁 Repository Structure
-```
-CP_E_BUCKET/
-├── backend/
-│   ├── .env.example       # Template for environment variables
-│   ├── app.py             # Flask REST API + Static SPA server
-│   ├── db.py              # MySQL connection factory (mysql-connector-python)
-│   ├── security.py        # Salted PBKDF2 password hashing & verification
-│   └── inspect_db.py      # Diagnostic schema inspection tool
-├── frontend/
-│   ├── index.html         # Single-page application entry point
-│   ├── app.js             # React components (Shop, Detail, Cart, Checkout, Admin, Auth)
-│   └── style.css          # Dark Navy/Cyan responsive styling
-├── database/
-│   └── schema.sql         # Clean DDL reference for the 7 MySQL tables & triggers
-├── .gitignore             # Strict exclusion list for secrets and backups
-└── README.md              # Project documentation and setup guide
-```
+Payments are **simulated** (the demo gateway always approves, Cash on Delivery stays pending until delivery). No card details are ever collected.
 
----
+## Run it locally
 
-## 🗄️ Database Architecture & Triggers
-The project runs on 7 relational tables:
-1. `userr`: User profiles and authentication.
-2. `category`: Product categories.
-3. `product`: Product inventory with live stock and pricing.
-4. `orders`: Order headers.
-5. `order_item`: Order line items.
-6. `payment`: Payment records and methods.
-7. `delivery`: Courier shipment tracking.
+You need Python 3.10+, Node 20+ and MySQL 8.0.16+.
 
-### Triggers Enforced in MySQL:
-- `reduce_stock_after_insert`: Automatically deducts inventory upon item insert.
-- `restore_stock_after_delete`: Automatically replenishes stock if order items are cancelled.
-- `sync_order_status_after_update`: Sets order status to `'Paid'` when payment is marked `'Success'`.
-
----
-
-## 🚀 Local Setup Instructions
-
-### 1. Prerequisites
-- Python 3.10+
-- MySQL Server 8.0+
-
-### 2. Configure Environment Variables
-Copy `backend/.env.example` to `backend/.env`:
 ```bash
-cp backend/.env.example backend/.env
-```
-Open `backend/.env` and supply your local MySQL password and desired admin credentials:
-```env
-DB_HOST=localhost
-DB_PORT=3306
-DB_USER=root
-DB_PASSWORD=your_mysql_password
-DB_NAME=e_bucket
+# 1. Backend
+pip install -r backend/requirements.txt
+cp backend/.env.example backend/.env          # then edit it (see below)
+python backend/init_db.py --seed              # creates the e_bucket database + demo data
+python backend/app.py                         # API on http://localhost:5000
 
-SECRET_KEY=your_random_secret_key_here
-
-ADMIN_USERNAME=admin
-ADMIN_PASSWORD=your_secure_admin_password
+# 2. Frontend (second terminal)
+cd frontend
+npm install
+npm run dev                                   # http://localhost:5173, proxies /api to the backend
 ```
 
-### 3. Install Python Dependencies
+In `backend/.env` set `DB_PASSWORD`, a `SECRET_KEY` (`python -c "import secrets; print(secrets.token_urlsafe(48))"`) and an `ADMIN_PASSWORD`. The server refuses to start without a strong `SECRET_KEY`.
+
+**Demo logins** (after `--seed`): customer `demo@ebucket.in` / `Demo@1234`. Admin: the `ADMIN_USERNAME` / `ADMIN_PASSWORD` you put in `.env`. Seeding creates known accounts, so never seed a production database.
+
+**Single-process mode:** `cd frontend && npm run build`, then `python backend/app.py` serves the built site and the API together on one origin.
+
+### Upgrading the original database
+
+If you already have a database from the first version of this project, keep your data and upgrade it in place:
+
 ```bash
-pip install flask flask-cors mysql-connector-python python-dotenv
+python backend/init_db.py --migrate
 ```
 
-### 4. Run the Application
-In your terminal, navigate to the project root and execute:
+It switches ids to auto-increment, widens the password column, adds the unique email and stock/price constraints, adds product photos and installs the new triggers. Existing plaintext or weakly hashed passwords keep working and are upgraded to scrypt the first time each user signs in.
+
+## Tests
+
 ```bash
-python backend/app.py
-```
-Open your browser and navigate to:
-```
-http://localhost:5000
+cd backend && pip install -r requirements-dev.txt
+TEST_DB_HOST=localhost TEST_DB_PASSWORD=... python -m pytest --cov=.   # uses a throwaway e_bucket_test database
+cd ../frontend && npm test
 ```
 
----
+The backend suite (65 tests, about 88% coverage) covers auth, validation, authorization between users, checkout rollback, a two-buyers-one-unit race, cancellation, and CSRF.
 
-## 🌟 Features Overview
+## Security notes
 
-### Customer Experience
-- **Browse Multi-Category Catalog**: Electronics, Musical Instruments, Fitness, Gaming, Wearables, etc.
-- **Search & Category Filters**: Real-time filtering.
-- **Dynamic Stock Visibility**:
-  - `> 10 units`: Displays "In Stock" (exact quantity hidden from customers).
-  - `4 to 10 units`: Displays "Only X left!" (Yellow/Orange).
-  - `1 to 3 units`: Displays "Only X left!" (Red).
-  - `0 units`: Displays "Out of Stock" (Red badge & Add to Cart disabled).
-- **Shopping Cart**: Client-side cart with real-time stock limits.
-- **Atomic Checkout**: MySQL transaction writing to `orders`, `order_item`, `payment`, and `delivery`.
-- **Receipt & Order History**: Real-time receipt tracking and order status.
-- **Secure Authentication**: Salted PBKDF2 hashing fitting within `VARCHAR(50)`, supporting automatic upgrade on login.
+- Passwords: salted scrypt. Login timing does not reveal which emails exist. Auth endpoints are rate limited.
+- Sessions: signed token in an **httpOnly, SameSite** cookie, so page scripts cannot read it. Every write also needs an `X-Requested-With` header (CSRF defence). Customer and admin sessions are separate roles.
+- Customers can only read their own orders; the server never trusts client prices, ids or stock.
+- Checkout is one transaction with row locks: no overselling, and stock can never go negative (a `CHECK` constraint backs it up).
+- Every query is parameterised. Search wildcards are escaped. Sort order comes from an allow-list.
+- Errors shown to users are generic; details go to the server log only.
+- Strict Content-Security-Policy and standard security headers on all responses.
+- `backend/.env` is git-ignored. **The secret key that older versions of this repo put in `.env.example` is public: if you ever used it, rotate it.**
 
-### Admin Dashboard
-- **Business Metrics**: Real-time counters for customers, products, orders, and total revenue.
-- **Product Management**: Add, edit, or delete catalog items with exact integer stock counts.
-- **Order Management**: Inspect orders, delivery logistics, and update order statuses.
-- **Customer Directory**: View customer profiles directly from the `userr` table.
+## Deploying
+
+The browser should always call `/api` on the same origin as the page, because that is what makes cookie sessions safe.
+
+- **One server:** build the frontend and run `python backend/app.py` behind HTTPS. Set `TRUST_PROXY=true` if a proxy sits in front.
+- **Vercel + separate API:** deploy `frontend/` to Vercel and add a rewrite in `frontend/vercel.json` sending `/api/:path*` to your backend URL, so the browser still sees one origin. Host MySQL somewhere managed.
+- Do not use ngrok for a public site, and do not run with `FLASK_DEBUG=true`.
+
+## Project layout
+
+```
+backend/    Flask API (app, auth, catalog, orders, admin, validators, db, security) + tests/
+frontend/   React app: src/pages, src/components, src/context, src/lib, src/styles; public/products = photos
+database/   schema.sql · seed.sql (demo data) · migrate_v1_to_v2.sql
+```
+
+## Photo credits
+
+Product photos are from Wikimedia Commons under CC0, CC BY or CC BY-SA licences. See [frontend/public/products/CREDITS.md](frontend/public/products/CREDITS.md) for each photo's author and licence. They are illustrative stand-ins and some show other brands' products: replace them with your own photos before a real launch.
