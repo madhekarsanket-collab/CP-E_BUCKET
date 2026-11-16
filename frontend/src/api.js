@@ -17,7 +17,7 @@ export const setUnauthorizedHandler = (handler) => {
 /** JSON request helper. Failures become ApiError with a message that is safe to show. */
 export async function api(path, { method = 'GET', body } = {}) {
   // The X-Requested-With header is the anti-forgery proof the server requires on every write.
-  const headers = { Accept: 'application/json', 'X-Requested-With': 'ebucket-web' };
+  const headers = { Accept: 'application/json', 'X-Requested-With': 'ebucket-web', 'ngrok-skip-browser-warning': '1' };
   if (body !== undefined) headers['Content-Type'] = 'application/json';
 
   let response;

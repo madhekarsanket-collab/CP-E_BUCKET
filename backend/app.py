@@ -55,7 +55,9 @@ def _configure(app, config):
     if app.config['SECRET_KEY'] in KNOWN_LEAKED_SECRETS:
         raise RuntimeError("SECRET_KEY is a value that was published in this project's git history. Generate a new one.")
     if os.getenv('TRUST_PROXY', '').lower() in ('1', 'true', 'yes'):
-        app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1)
+        hops = int(os.getenv('PROXY_HOPS', '1'))  # 2 when the chain is Vercel -> ngrok -> this server
+        # Only the proxy closest to us (ngrok) reports the protocol, but every hop adds a client address.
+        app.wsgi_app = ProxyFix(app.wsgi_app, x_for=hops, x_proto=1, x_host=1)
 
 
 def _register_guards(app):
@@ -142,7 +144,9 @@ def main():
     else:
         from waitress import serve
         logging.info('E-Bucket API listening on http://0.0.0.0:%s', port)
-        serve(app, host='0.0.0.0', port=port)
+        behind_proxy = os.getenv('TRUST_PROXY', '').lower() in ('1', 'true', 'yes')
+        # waitress drops X-Forwarded-* headers unless told otherwise; ProxyFix (in create_app) then reads them.
+        serve(app, host='0.0.0.0', port=port, clear_untrusted_proxy_headers=not behind_proxy)
 
 
 if __name__ == '__main__':

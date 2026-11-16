@@ -70,3 +70,9 @@ htmlcov/
 *.local.sql
 
 localrun.log
+
+# 10. Vercel project link
+.vercel/
+
+ngrok.log
+localrun.log

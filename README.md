@@ -66,20 +66,20 @@ The backend suite (65 tests, about 88% coverage) covers auth, validation, author
 - Strict Content-Security-Policy and standard security headers on all responses.
 - `backend/.env` is git-ignored. **The secret key that older versions of this repo put in `.env.example` is public: if you ever used it, rotate it.**
 
-## Deploying (Vercel + hosted MySQL)
+## Deploying (Vercel site + your own MySQL through an ngrok tunnel)
 
-The whole app is one Vercel project: the React build is served as static files and `api/index.py` runs the Flask API as a serverless function, so the browser always talks to one origin (which is what makes the cookie sessions safe). The database is a hosted MySQL, because Vercel has none.
+The website runs on Vercel. Its `/api` calls are forwarded to the shop server on your PC through an ngrok tunnel, so the live site reads and writes your own MySQL. **Only the shop's API goes through the tunnel; MySQL itself is never exposed.** The browser only ever talks to the Vercel address, which keeps the cookie sessions safe.
 
-1. **Create a hosted MySQL 8** that allows triggers (for example Aiven's free MySQL). Note its host, port, user, password and database name.
-2. **Load the schema and demo data into it** from your machine, so the live database matches this repo:
-   ```bash
-   DB_HOST=... DB_PORT=... DB_USER=... DB_PASSWORD=... DB_NAME=... DB_SSL=true python backend/init_db.py --seed
-   ```
-   Use `--migrate` instead of `--seed` to upgrade an existing database, and drop `--seed` for a production shop without demo accounts.
-3. **Import the repo in Vercel** (root directory = repo root) and set these environment variables: `DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASSWORD`, `DB_NAME`, `DB_SSL=true`, `DB_POOL_SIZE=2`, `SECRET_KEY` (fresh, 32+ characters), `ADMIN_USERNAME`, `ADMIN_PASSWORD`, `COOKIE_SECURE=true`, `TRUST_PROXY=true`.
-4. Deploy. Any later change to `database/*.sql` reaches the live database by re-running step 2, and every push to the connected branch redeploys the site.
+```
+browser -> Vercel (static site + /api rewrite) -> ngrok tunnel -> Flask on your PC -> MySQL
+```
 
-Rate-limit counters live in memory per function instance, so on Vercel they are a soft limit. Do not run with `FLASK_DEBUG=true`, and do not use ngrok for a public site.
+1. Fill in `backend/.env` (database login, `SECRET_KEY`, `ADMIN_PASSWORD`, `TRUST_PROXY=true`, `PROXY_HOPS=2`) and create the tables: `python backend/init_db.py --seed`.
+2. Install ngrok, sign in once (`ngrok config add-authtoken ...`) and claim your free static domain in the ngrok dashboard.
+3. Put that domain in `frontend/vercel.json` (the `/api` rewrite), then from `frontend/` run `vercel deploy --prod`.
+4. Whenever you want the live site up, run `start-live.bat` and leave it open. The site needs your PC on, the shop server running and ngrok running. If any is off, the pages load but shop data does not.
+
+The 1-hop alternative (hosted MySQL, Vercel runs the API as a serverless function) is described by `vercel.json` and `api/index.py` at the repo root: set the `DB_*` variables in Vercel and run `python backend/init_db.py --seed` against the hosted database. Do not run with `FLASK_DEBUG=true`.
 
 For a single server instead, build the frontend and run `python backend/app.py` behind HTTPS.
 
