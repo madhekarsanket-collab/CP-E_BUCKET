@@ -2,6 +2,7 @@
 
     python backend/init_db.py            create tables and triggers (safe to re-run)
     python backend/init_db.py --seed     also load demo data (empty database only)
+    python backend/init_db.py --fix-ids  reset id counters (no gaps for the next new rows)
     python backend/init_db.py --migrate  upgrade a database made from the original schema, then re-run schema.sql
 """
 import argparse
@@ -56,9 +57,27 @@ def preflight(cursor):
         sys.exit('Fix this data first, then run --migrate again. Nothing was changed.\n  ' + '\n  '.join(problems))
 
 
+ID_COLUMNS = {'userr': 'USER_ID', 'category': 'CATEGORY_ID', 'product': 'PRODUCT_ID', 'orders': 'ORDER_ID',
+              'order_item': 'ORDER_ITEM_ID', 'payment': 'RECEIPT_NO', 'delivery': 'SHIPMENT_ID'}
+
+
+def fix_ids(cursor):
+    """Point every auto-increment counter at MAX(id)+1, closing gaps left by deleted test rows.
+
+    MySQL never reuses a deleted id, so after deleting rows the next new row would skip numbers.
+    This does not renumber existing rows.
+    """
+    cursor.execute('USE `%s`' % os.getenv('DB_NAME', 'e_bucket'))
+    for table, column in ID_COLUMNS.items():
+        cursor.execute(f'SELECT COALESCE(MAX(`{column}`), 0) + 1 FROM `{table}`')
+        cursor.execute(f'ALTER TABLE `{table}` AUTO_INCREMENT = {int(cursor.fetchone()[0])}')
+    print('auto-increment counters reset to the next free id')
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument('--seed', action='store_true', help='load demo data into an empty database')
+    parser.add_argument('--fix-ids', action='store_true', help='reset id counters so new rows continue without gaps')
     parser.add_argument('--migrate', action='store_true', help='upgrade a v1 database in place')
     args = parser.parse_args()
 
@@ -74,6 +93,8 @@ def main():
             if cursor.fetchone()[0]:
                 sys.exit('Refusing to seed: the product table already has rows.')
             run(cursor, 'seed.sql')
+        if args.fix_ids:
+            fix_ids(cursor)
         conn.commit()
     finally:
         cursor.close()
